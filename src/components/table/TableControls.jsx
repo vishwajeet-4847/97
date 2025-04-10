@@ -9,7 +9,7 @@ const TableControls = ({ entriesPerPage, setEntriesPerPage, searchQuery, setSear
       onChange={(e) => setEntriesPerPage(Number(e.target.value))}
       className="border border-gray-300 rounded p-1 w-16"
     >
-      {[10, 25, 50, 100].map(size => <option key={size} value={size}>{size}</option>)}
+      {[5,10, 25, 50, 100].map(size => <option key={size} value={size}>{size}</option>)}
     </select>
     <span className="ml-2">entries</span>
   </div>

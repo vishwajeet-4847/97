@@ -4,7 +4,7 @@ import TableHeader from "./TableHeader";
 import TablePagination from "./TablePagination";
 
 // Reusable Table Component
-const DataTable = ({ title, data, columns, entriesPerPage, setEntriesPerPage, searchQuery, setSearchQuery, sortField, sortDirection, onSort, currentPage, totalPages, goToPage , rowKey , userTypeCode , setIsNested ,isNested}) => {
+const DataTable = ({ title, data, columns, entriesPerPage, setEntriesPerPage, searchQuery, setSearchQuery, sortField, sortDirection, onSort, currentPage, totalPages, goToPage , userTypeCode , setIsNested ,isNested}) => {
 
  
   return (
@@ -18,7 +18,7 @@ const DataTable = ({ title, data, columns, entriesPerPage, setEntriesPerPage, se
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <TableHeader columns={columns} sortField={sortField} sortDirection={sortDirection} onSort={onSort} />
-            <TableBody data={data} columns={columns}  rowKey={rowKey} userTypeCode={userTypeCode} setIsNested={setIsNested}  isNested={isNested}/>
+            <TableBody data={data} columns={columns}  userTypeCode={userTypeCode} setIsNested={setIsNested}  isNested={isNested}/>
           </table>
         </div>
         <TablePagination currentPage={currentPage} totalPages={totalPages} goToPage={goToPage} />

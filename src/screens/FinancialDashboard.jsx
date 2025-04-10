@@ -334,7 +334,7 @@ const FinancialDashboard = () => {
           {/* Table */}
           <DataTable
             columns={FINANCIAL_DASHBOARD_COL}
-            rowKey={buttonTitle}
+          
             data={currentUsers}
             entriesPerPage={entriesPerPage}
             setEntriesPerPage={setEntriesPerPage}

@@ -188,9 +188,9 @@ export const getBetDetails = async ({ userId, gtype, match_id, identifier }) => 
       identifier
     });
 
-    const betDetails = response.data.bet_details;
+    const betDetails = response.data;
     console.log('Bet Details:', betDetails);
-    return betDetails;
+    return betDetails.bet_details;
 
   } catch (error) {
     console.error('Error fetching bet details:', error);

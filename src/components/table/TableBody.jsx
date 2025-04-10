@@ -2,13 +2,14 @@ import { useContext } from "react";
 import ActionButtons from "../ActionButtons";
 import { AccountContext } from "../../services/account/account.context";
 import { useNavigate } from "react-router";
+import { getUserType } from "../../utils/user_type_converter";
 // import { useNavigate } from "react-router";
 
 const formatValue = (
   value,
   format,
   row,
-  rowKey = "",
+  
   userTypeCode,
   onGetDownLineData,
   setIsNested,
@@ -20,11 +21,11 @@ const formatValue = (
     return format(row);
   }
   if (format === "username") {
+  
+    
     return (
       <div
-        className={`flex flex-row items-center gap-2 ${
-          isNested ? "text-black" : "text-blue-500"
-        }`}
+        className={`flex flex-row items-center gap-2 ${  row.user_type == 1 || isNested  ? "text-black":"text-blue-500"} `}
         style={{fontSize: "12px"}}
         onClick={async () => {
           if (userTypeCode && !isNested) {
@@ -35,19 +36,19 @@ const formatValue = (
           }
         }}
       >
-        {rowKey.length > 0 && rowKey && (
+
           <span
           style={{fontSize: "8px", minWidth: "80px"}}
             className={`px-1 py-1 font-bold rounded bg-green-500 text-white 
        `}
           >
-            <center style={{}}>{rowKey}</center>
+            <center style={{}}>{getUserType(row.user_type)}</center>
             
           </span>
-        )}
+    
         <span
-          className={`text-blue-500 ${
-            userTypeCode ? "cursor-pointer font-semibold hover:underline" : ""
+          className={`${  row.user_type == 1   ? "text-black":"text-blue-500"} ${
+            row.user_type != 1? "cursor-pointer font-semibold hover:underline" : ""
           }`}
         >
           {value}
@@ -96,11 +97,9 @@ const formatValue = (
     return (
       <span
         onClick={() =>
-          navigate(
-           ` ?m=${row?.m}&e=${row?.category}&ma=${row.marketname}`,{
+          navigate(`?m=${row?.category}&e=${row?.match_id}&ma=${row.identifier}`, {
             state: { userData: row },
-           }
-          )
+          })
         }
         className={`px-2 py-1 text-xs cursor-pointer rounded text-blue-500 `}
       >
@@ -131,14 +130,28 @@ const formatValue = (
       </span>
     );
   }
+  if(format === "profit"){
+    return(
+    <span className={`${value >=0? "text-green-500":"text-red-500"}`}>
+      {value}
+    </span>
+    )
+  }
+  if(format === "gameName"){
+    return row.game_name || row.bet_name
+  }
+  if(format === "roundId"){
+    return row.round_id || row.match_id
+  }
 
   return value;
 };
 
+
 const TableBody = ({
   data,
   columns,
-  rowKey,
+ 
   userTypeCode,
   setIsNested,
   isNested,
@@ -161,6 +174,8 @@ const TableBody = ({
           >
             {columns.map(
               ({ key, format, dataKey, actionsConfig }, colIndex) => {
+               
+                
                 const cellValue = row[dataKey || key];
 
                 return (
@@ -175,7 +190,7 @@ const TableBody = ({
                         cellValue,
                         format,
                         row,
-                        rowKey,
+                     
                         userTypeCode,
                         onGetDownLineData,
                         setIsNested,

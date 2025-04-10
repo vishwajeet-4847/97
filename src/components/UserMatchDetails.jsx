@@ -9,6 +9,7 @@ import { NavigationTableCompo } from "./Modal/UserMatchDetails/NavigationLink";
 import DateRangePicker from "./DateRangePicker";
 import { AccountContext } from "../services/account/account.context";
 import LoadingSpinner from "./LoadingSpinner";
+import { filterData, paginateData } from "../utils/table";
 
 
 const UserMatchDetails = () => {
@@ -16,11 +17,20 @@ const UserMatchDetails = () => {
   const [startDate, setStartDate] = useState("2025-04-01");
 // const [endDate, setEndDate] = useState(formatDate(new Date()));
 const [endDate, setEndDate] = useState("2025-04-02");
-const [entriesPerPage , setEntriesPerPage] = useState(10);
+const [ dataNow , setDataNow ] = useState([]);
 const [ uniqueBet , setUniqueBet ] = useState(null);
 const [allBetDetails , setallBetDetails] = useState(null);
 const [profitLossGtype , setProfitLossGtype ] = useState(null);
 const [profitLossMatchwise , setProfitLossMatchwise] = useState(null);
+
+// table states
+ const [entriesPerPage, setEntriesPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm , setSearchTerm ] = useState("");
+
+
+
+
 const navigate = useNavigate();
 const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -37,36 +47,13 @@ const location = useLocation();
 
   
   // Get values from query parameters
-  const m = searchParams.get("m");
-  const e = searchParams.get("e");
-  const ma = searchParams.get("ma");
+ let m = searchParams.get("m");
+  let e = searchParams.get("e");
+  let ma = searchParams.get("ma");
 
-  console.log(m, e, ma, "sakdalfknas");
 
-  // useEffect(() => {
-  //   if (!userData) {
-  //     navigate("/list/agent"); // Go back to the previous page if userData is not available
-  //   }
-  //   // userData.user_id replace it with true one on finction
-
-  //   if (m) {
-  //     const profitLossMatchwise = onGetProfitLossMatchwise("2", startDate, endDate , m);
-  //     console.log(profitLossMatchwise, "profitLossMatchwise");
-  //     setProfitLossMatchwise(profitLossMatchwise);
-      
-  //   }
-  //   const fetchData = async () => {
-  //     const  profitLossGtype = await onGetProfitLossByGtype("2", startDate, endDate);
-  //     console.log(profitLossGtype, "profitLossGtype");
-  //     const profitLossMatchwise = await onGetProfitLossMatchwise("2", startDate, endDate);
-  //     console.log(profitLossMatchwise, "profitLossMatchwise");
-      
-  //     setProfitLossGtype(profitLossGtype);
-  //   };
-  //   fetchData();
-  // }, []);
- // const userId = userData?.user_id;
- const userId = "2"; // Replace with the actual user ID from userData
+ let userId = "2"
+  // Replace with the actual user ID from userData
  const fetchPandL = async () => {
   if (!userData) {
     navigate("/list/agent");
@@ -78,47 +65,78 @@ const location = useLocation();
 
   try {
     if (m && e && ma) {
+     
+     
+      // userId = "12345";
+      // m = "Cricket";
+      // e = "628559015";
+      // ma = "Kolkata Knight Riders";
+  
+  
       const bets = await onGetBetDetails(userId, m, e, ma);
+      // const allBets = bets.map(item => ({
+      //   ...item,
+      //   userId,
+      //   category: m,
+      //   match_id: matchID,
+      //   commission: item.commision ?? 0 
+
+      // }));
+      console.log(bets ,"hello");
+      
       setallBetDetails(bets);
+      setDataNow(bets);
       return;
     }
 
     if (m && e && !ma) {
+    
       const matchID = m === "Casino" ? 0 : e;
       const uniqueBets = await onGetUniqueBetDetails(userId, startDateD, endDateD, m, matchID);
+      console.log(uniqueBets);
+      
       const uniqueBetsData = uniqueBets.map(item => ({
         ...item,
         userId,
         category: m,
-        match_id: matchID
+        identifier: item.bet_name ?? `${item.game_name}_${item.round_id}`, // If identifier is undefined or null, set to 0
+        match_id: matchID,
+        commission: item.commision ?? 0 // If commision is undefined or null, set to 0
       }));
+      console.log(uniqueBetsData, "uniqueBetsData");
       setUniqueBet(uniqueBetsData);
+      setDataNow(uniqueBetsData);
       return;
     }
 
     if (m && !e && !ma) {
+     
       const matchwise = await onGetProfitLossMatchwise(userId, startDateD, endDateD, m);
       const matchWiseData = matchwise.profit_loss.map(item => ({
         ...item,
         userId,
         category: m,
+        commision: item.commision ?? 0
       }));
       console.log(matchWiseData, "matchWiseData");
       
       setProfitLossMatchwise(matchWiseData);
+      setDataNow(matchWiseData);
       return;
     }
 
     if (!m && !e && !ma) {
+    
       const gtype = await onGetProfitLossByGtype(userId, startDateD, endDateD);
       const gtypeWithUserId = gtype.profit_loss.map(item => ({
         ...item,
         userId,
-        commision: item.commision ?? 0 // If commision is undefined or null, set to 0
+        commission: item.commission ?? 0 // If commision is undefined or null, set to 0
       }));
       console.log(gtypeWithUserId, "gtypeWithUserId");
       
       setProfitLossGtype(gtypeWithUserId);
+      setDataNow(gtypeWithUserId);
     }
   } catch (error) {
     console.error("Error fetching user match details:", error);
@@ -126,6 +144,7 @@ const location = useLocation();
 };
 
 useEffect(() => {
+  setDataNow([])
   fetchPandL();
 }, []);
 
@@ -274,10 +293,12 @@ useEffect(() => {
       details: "West Indies vs Bangladesh - West Indies to win",
     },
   ];
-
-  const fetchPanfL = ()=>{
-
-  }
+const filteredData = filterData(dataNow , searchTerm)
+ const { paginatedData: currentData, totalPages } = paginateData(
+    filteredData,
+    currentPage,
+    entriesPerPage
+  );
 
   return (
     <div className="container m-auto sm:w-full flex flex-col">
@@ -304,9 +325,14 @@ useEffect(() => {
           </div>
           <DataTable
             columns={USER_BETS_DETAILS_COL}
-            data={betsData}
+            data={currentData}
+            totalPages={totalPages}
+            currentPage={currentPage}
+            goToPage={setCurrentPage}
             entriesPerPage={entriesPerPage}
             setEntriesPerPage={setEntriesPerPage}
+            searchQuery={searchTerm}
+            setSearchQuery={setSearchTerm}
           />
         </div>
       ) : (
@@ -318,33 +344,53 @@ useEffect(() => {
           {!m && !e && !ma &&  profitLossGtype &&(
             <DataTable
               columns={USER_MATCH_DETAILS_COL}
-              data={profitLossGtype}
+              data={currentData}
+            totalPages={totalPages}
+            currentPage={currentPage}
+            goToPage={setCurrentPage}
               entriesPerPage={entriesPerPage}
               setEntriesPerPage={setEntriesPerPage}
+              searchQuery={searchTerm}
+              setSearchQuery={setSearchTerm}
             />
           )}
           {m && !e && !ma &&  profitLossMatchwise && (
             <DataTable
               columns={USER_MATCH_DETAILS_GAME_COL}
-              data={profitLossMatchwise}
+              data={currentData}
+            totalPages={totalPages}
+            currentPage={currentPage}
+            goToPage={setCurrentPage}
               entriesPerPage={entriesPerPage}
               setEntriesPerPage={setEntriesPerPage}
+              searchQuery={searchTerm}
+              setSearchQuery={setSearchTerm}
             />
           )}
           {m && e && !ma && uniqueBet && (
             <DataTable
               columns={USER_MATCH_DETAILS_GAMENAME_COL}
-              data={uniqueBet}
+              data={currentData}
+              totalPages={totalPages}
+              currentPage={currentPage}
+              goToPage={setCurrentPage}
               entriesPerPage={entriesPerPage}
               setEntriesPerPage={setEntriesPerPage}
+              searchQuery={searchTerm}
+              setSearchQuery={setSearchTerm}
             />
           )}
-          {m && e && !ma && allBetDetails && (
+          {m && e && ma && allBetDetails && (
             <DataTable
               columns={USER_MATCH_DETAILS_GAMENAME_COL}
-              data={allBetDetails}
+              data={currentData}
+              totalPages={totalPages}
+              currentPage={currentPage}
+              goToPage={setCurrentPage}
               entriesPerPage={entriesPerPage}
               setEntriesPerPage={setEntriesPerPage}
+              searchQuery={searchTerm}
+              setSearchQuery={setSearchTerm}
             />
           )}
         </>

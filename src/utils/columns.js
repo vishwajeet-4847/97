@@ -208,10 +208,10 @@ export const USER_MATCH_DETAILS_COL = [
   {
     key: "net_profit_loss",
     label: " Profit/Loss",
-    format: "currency",
+    format: "profit",
   },
   {
-    key: "commision",
+    key: "commission",
     label: "Commission",
     sortable : true
   },
@@ -219,12 +219,18 @@ export const USER_MATCH_DETAILS_COL = [
     key: "total_profit_loss",
     dataKey: "net_profit_loss",
     label: "Total Profit/Loss",
-    format: "currency",
+    format: "profit",
   },
   
 ];
 
 export const USER_MATCH_DETAILS_GAME_COL = [
+  {
+    label:"Sport Name",
+    key: "category",
+  
+
+  },
   {
     key: "match_name",
     label: "Match Name",
@@ -236,65 +242,88 @@ export const USER_MATCH_DETAILS_GAME_COL = [
     format:"eventname"
 
   },
+
+  {
+    key: "commision",
+    label: "Commission",
+    sortable : true
+  },
   {
     key: "net_profit_loss",
     label: "Net Profit/Loss",
-    format: "currency",
+    format: "profit",
   }
 ];
 
 export const USER_MATCH_DETAILS_GAMENAME_COL = [
   {
+    label: "Sport Name",
+    key: "category",
+  },
+  {
+    key: "identifier",
+    label: "Identifier",
+    format: "marketname",
+  },
+  {
     key: "game_name",
     label: "Game Name",
-    format: "makelink",
+    format: "gameName",
   },
   {
     key: "round_id",
     label: "Round Id",
-    format: "makelink",
+    format: "roundId",
+    sortable: true,
+  },
+  {
+    key: "commission",
+    label: "Commission",
+    sortable : true
   },
   {
     key: "net_profit_loss",
     label: "Net Profit Loss",
-    format: "marketname",
+    format: "profit",
+    sortable: true,
   },
- 
 ];
 
 export const USER_BETS_DETAILS_COL = [
   {
-    key: "bettype",
+    key: "bet_type",
+    // vback
     label: "Bet Type",
     format: "bettype",
   },
   {
-    key: "userprice",
+    key: "bet_rate",
     label: "User Price",
     format: "bettype",
   },
   {
-    key: "amount",
+    key: "win_amount",
     label: "Amount",
     format: "bettype",
   },
   {
-    key: "pl",
+    key: "loss_amount",
     label: "PL",
     format: "bettype",
   },
   {
-    key: "placedate",
+    key: "created_at",
     label: "Place Date",
     format: "bettype",
   },
   {
     key: "matchdate",
+    dataKey:"created_at",
     label: "Match Date",
     format: "bettype",
   },
   {
-    key: "details",
+    key: "bet_name",
     label: "Details",
     format: "bettype",
   },
