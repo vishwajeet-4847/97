@@ -367,3 +367,6 @@ export const ACCOUNT_STATEMENT_COLS = [
     format: "text",
   },
 ];
+
+
+export  const DataSourceOptions = ["DATA SOURCE","LIVE DATA", "BACKUP DATA", "OLD DATA"];

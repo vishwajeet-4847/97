@@ -9,6 +9,7 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [token, setToken] = useState(null);
+  const [isPasswordChanged, setIsPasswordChanged] = useState(false);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -65,14 +66,15 @@ const AuthProvider = ({ children }) => {
   
       if (result?.status) {
         console.log("Password changed successfully");
-  
+        setIsPasswordChanged(true);
+        
         // Fetch updated user profile
        
         
-        const updatedUserData = await onLogin(user.mob , newPassword);
-        console.log(updatedUserData);
+        // const updatedUserData = await onLogin(user.mob , newPassword);
+        // console.log(updatedUserData);
         
-        setUser(updatedUserData);
+        // setUser(updatedUserData);
   
         return true;
       } else {
@@ -90,7 +92,7 @@ const AuthProvider = ({ children }) => {
   
  
   return (
-    <AuthContext.Provider value={{ isAuthenticated, onLogin, onLogout, user, loading, error, token  , onChangePassword}}>
+    <AuthContext.Provider value={{ isPasswordChanged,isAuthenticated, onLogin, onLogout, user, loading, error, token  , onChangePassword}}>
       {children}
     </AuthContext.Provider>
   );

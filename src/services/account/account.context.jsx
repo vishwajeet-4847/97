@@ -325,6 +325,8 @@ const onGetProfitLossMatchwise = async (userId, fromdate, todate, gtype) => {
 const onGetAccountsStatementData = async (userId, fromDate, toDate) => {
   setLoading(true);
   setError(null);
+  console.log(userId, fromDate, toDate , "account statement data");
+  
 
   try {
     const data = await getAccountsStatementData ({userId, fromDate, toDate });

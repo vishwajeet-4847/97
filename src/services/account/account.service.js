@@ -263,7 +263,7 @@ export const getAccountsStatementData = async ({ userId, fromDate, toDate }) => 
     const response = await axios.post("https://admin.titan97.live/Apicall/accounts", {
       userId,
       fromDate,
-      toDate,
+      toDate
     });
 
     console.log("Accounts Data Response:", response.data);
