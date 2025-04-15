@@ -14,11 +14,13 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
+    const isPasswordChange = localStorage.getItem("isPasswordChanged");
 
     if (storedToken && storedUser) {
       setToken(storedToken);
       setUser(JSON.parse(storedUser));
       setIsAuthenticated(true);
+      setIsPasswordChanged(isPasswordChange);
     }
     setLoading(false);
   }, []);
@@ -66,7 +68,9 @@ const AuthProvider = ({ children }) => {
   
       if (result?.status) {
         console.log("Password changed successfully");
+
         setIsPasswordChanged(true);
+        localStorage.setItem("isPasswordChanged", true); // Store the password change status in localStorage
         
         // Fetch updated user profile
        

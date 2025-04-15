@@ -212,8 +212,8 @@ export const USER_MATCH_DETAILS_COL = [
   },
   {
     key: "commission",
-    label: "Commission",
-    sortable : true
+    label: "Commission"
+
   },
   {
     key: "total_profit_loss",
@@ -246,7 +246,7 @@ export const USER_MATCH_DETAILS_GAME_COL = [
   {
     key: "commision",
     label: "Commission",
-    sortable : true
+    
   },
   {
     key: "net_profit_loss",
@@ -274,18 +274,18 @@ export const USER_MATCH_DETAILS_GAMENAME_COL = [
     key: "round_id",
     label: "Round Id",
     format: "roundId",
-    sortable: true,
+    
   },
   {
     key: "commission",
     label: "Commission",
-    sortable : true
+    
   },
   {
     key: "net_profit_loss",
     label: "Net Profit Loss",
     format: "profit",
-    sortable: true,
+    
   },
 ];
 

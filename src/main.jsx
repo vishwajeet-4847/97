@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router";
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router";
 import "./index.css";
 import App from "./App.jsx";
 import ChangePassword from "./screens/ChangePassword.jsx";
@@ -23,6 +23,11 @@ import ListMarket from "./components/Rossan/ListMarket.jsx";
 
 import { io } from "socket.io-client";
 import UserMatchDetailsWrapper from "./components/UserMatchDetailsWrapper.jsx";
+import AccountLayout from "./screens/AccountLayout.jsx";
+import ActivityLog from "./screens/ActivityLog.jsx";
+import AccountStatement from "./screens/AccountStatement.jsx";
+import UserMatchDetails from "./components/UserMatchDetails.jsx";
+import ProfileUser from "./screens/ProfileUser.jsx";
 export const socket = io("https://titan97.live", {
   reconnection: true,
   reconnectionAttempts: 5,
@@ -42,6 +47,18 @@ createRoot(document.getElementById("root")).render(
               element={<PasswordChangeHistory />}
             />
             <Route path="/account" element={<AccountDashboard />} />
+
+            <Route path="/my-account" element={<AccountLayout />}>
+          {/* {/* <Route path="profile" element={< />} />  */}
+          <Route path="profile" element={<ProfileUser />} />
+           <Route index element={<Navigate to="profit-loss" replace />} />
+          <Route path="bet-history" element={<BettingHistoryTable />} />
+          <Route path="profit-loss" element={<UserMatchDetailsWrapper />} />
+          <Route path="activitylog" element={<ActivityLog />} />
+          <Route path="accountstatement" element={<AccountStatement />} />
+          {/* Add more nested routes here */}
+        </Route>
+            
             <Route path="/commission" element={<CommissionTable />} />
             <Route path="/betting" element={<BettingHistoryTable />} />
             <Route path="/profit-loss" element={<ProfitLossTable />} />

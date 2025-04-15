@@ -1,6 +1,6 @@
-import axios from "axios";
+
 import { useContext, useEffect, useState } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router";
+import {useNavigate, useOutletContext, useSearchParams } from "react-router";
 import DataTable from "./table/DataTable";
 import { formatDate } from "../utils/formatters";
 import {
@@ -32,9 +32,9 @@ const UserMatchDetails = () => {
   const [isSourceSelected, setIsSourceSelected] = useState(false);
 
   const navigate = useNavigate();
-  const location = useLocation();
+  
   const [searchParams] = useSearchParams();
-  const { userData } = location.state || {};
+  const { userData } = useOutletContext();
   const {
     onGetBetDetails,
     onGetUniqueBetDetails,
@@ -46,7 +46,6 @@ const UserMatchDetails = () => {
   let m = searchParams.get("m");
   let e = searchParams.get("e");
   let ma = searchParams.get("ma");
-  let userId = "2";
 
 
 
@@ -76,7 +75,7 @@ console.log(userData);
         const uniqueBets = await onGetUniqueBetDetails(userData.user_id, startDateD, endDateD, m, matchID);
         const uniqueBetsData = uniqueBets.map((item) => ({
           ...item,
-          userId,
+          userId:userData.user_id,
           category: m,
           identifier: item.bet_name ?? `${item.game_name}_${item.round_id}`,
           match_id: matchID,
@@ -91,7 +90,7 @@ console.log(userData);
         const matchwise = await onGetProfitLossMatchwise(userData.user_id, startDateD, endDateD, m);
         const matchWiseData = matchwise.profit_loss.map((item) => ({
           ...item,
-          userId,
+          userId:userData.user_id,
           category: m,
           commision: item.commision ?? 0,
         }));
@@ -106,7 +105,7 @@ console.log(userData);
         const gtype = await onGetProfitLossByGtype(userData.user_id, startDateD, endDateD);
         const gtypeWithUserId = gtype.profit_loss.map((item) => ({
           ...item,
-          userId,
+          userId:userData.user_id,
           commission: item.commission ?? 0,
         }));
         setProfitLossGtype(gtypeWithUserId);
@@ -179,6 +178,7 @@ console.log(userData);
             data={currentData}
             totalPages={totalPages}
             currentPage={currentPage}
+            
             goToPage={setCurrentPage}
             entriesPerPage={entriesPerPage}
             setEntriesPerPage={setEntriesPerPage}
@@ -188,8 +188,7 @@ console.log(userData);
         </div>
       ) : (
         <>
-          <NavigationTableCompo />
-          {loading && <LoadingSpinner />}
+             {loading && <LoadingSpinner />}
           <DateRangePicker
             isDataSource={true}
             dataSourceOptions={DataSourceOptions}

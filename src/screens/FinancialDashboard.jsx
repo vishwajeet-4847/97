@@ -251,7 +251,11 @@ const FinancialDashboard = () => {
     navigate(`/account/${row.fs_id}`, { state: { value: "accountStatement" } });
   };
   const gotoarrow = (row) => {
-    navigate(`/user/${row.fs_id}`, { state: { value: "accountStatement" , userData : row } });
+    navigate('/my-account', {
+      state: {
+        userData: row,
+      },
+    });
   };
   return (
     <>
